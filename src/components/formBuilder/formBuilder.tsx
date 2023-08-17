@@ -6,7 +6,6 @@ import {
   Controller,
   useFieldArray,
   SubmitHandler,
-  
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -27,7 +26,12 @@ const formSchema = z.object({
 type FormSchemaType = z.infer<typeof formSchema>;
 
 function FormBuilder() {
-  const [formData, setFormData] = useState<object>({});
+  const [formData, setFormData] = useState<object>({
+    username: "",
+    email: "",
+    address: "",
+    metaData: {},
+  });
   const [dataSubmitted, setDataSubmitted] = useState({
     isOkay: false,
   });
@@ -40,12 +44,12 @@ function FormBuilder() {
     watch,
   } = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
-    defaultValues:{
-      username:"hh",
-      email:"",
-      address:"",
-      inputs:[]
-    }
+    defaultValues: {
+      username: "",
+      email: "",
+      address: "",
+      inputs: [],
+    },
   });
 
   const onSubmit: SubmitHandler<FormSchemaType> = (data) => {
@@ -65,7 +69,7 @@ function FormBuilder() {
   useEffect(() => {
     const subscribtion = watch((value) => {
       const metaData = value.inputs?.reduce((acc, val) => {
-        // @ts-ignore
+        // @ts-ignore 
         if (val && val.name) acc[val?.name] = val?.dataType;
         return acc;
       }, {});
@@ -182,21 +186,20 @@ function FormBuilder() {
             Add Dyamic field +{" "}
           </button>
         </div>
+
         <div className={classes.submit}>
-          <button
-            onClick={() => {
-              reset();
-              reset({ inputs: [] });
-              setDataSubmitted({ isOkay: false });
-            }}
-            className={classes.resetBtn}
-          >
-            Reset
-          </button>
           <input className={classes.submitBtn} type="submit" value="Submit" />
         </div>
       </form>
-
+      <button
+        onClick={() => {
+          reset();
+          setDataSubmitted({ isOkay: false });
+        }}
+        className={classes.resetBtn}
+      >
+        Reset
+      </button>
       <div>
         <pre>{JSON.stringify(formData, null, 2)}</pre>
       </div>
