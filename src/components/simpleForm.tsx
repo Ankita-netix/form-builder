@@ -27,7 +27,8 @@ function SimpleForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    trigger,
+    formState: { errors, isSubmitting,isValid },
   } = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
   });
@@ -36,10 +37,18 @@ function SimpleForm() {
     console.log(data);
   };
 
+
+  console.log("valid",isValid)
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} 
     
     >
+      <button 
+      onClick={()=>trigger()}
+      >
+        display data requirements
+      </button>
       <div>
         <label htmlFor="username">Your username</label>
         <input
